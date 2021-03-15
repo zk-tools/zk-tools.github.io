@@ -1,3 +1,3 @@
 # zk-tools.github.io
 
-## [zkFee]("./zk-fee/")
+## [zkFee](/zk-fee/)
