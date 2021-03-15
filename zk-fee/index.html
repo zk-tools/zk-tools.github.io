@@ -3,7 +3,30 @@
 	<script src="zk-gas-reloader.js"></script>
 </head>
 <body style="font-family: monospace;">
-Hello World
-<hr />
-<div id="new"></div>
+	<style>
+	.collums {display:inline}
+	.collums > div{border:1px solid red}
+	.collums > div{
+		width:33%;
+		float:left;
+	}
+	</style>
+	<h1>ZK-GAS</h1>
+	<h2>Transfer <span id=zk-transfer-eur>0,20 EUR</span> <span id=zk-transfer-eth>0,0002 ETH</span></h2>
+	<div class=collums>
+	<div><h2> Create account</h2><h3 id=zk-create-eur>2,00 EUR</h3><h4 id=zk-create-eth>0,002 ETH</h4></div>
+	<div><h2> Transfer New</h2><h3 id=zk-transfer-new-eur>0,30 EUR</h3><h4 id=zk-transfer-new-eth>0,0003 ETH</h4></div>
+	<div><h2> Withdraw</h2><h3 id=zk-withdraw-eur>2,00 EUR</h3><h4 id=zk-withdraw-eth>0,002 ETH</h4></div>
+	</div>
+	<h3>Based on ETH/EUR @ <span id=zk-based-eur>10,000 EUR</span></h3>
+	<a href="https://link.zksync.io?" target="_blank">Donate on ZKsync</a>
+	<h4>or ETH/ERC20</h4>
+	<script type="text/javascript">
+	window.onload = function() {
+	    /* Add your logic here */
+		var thing = document.getElementById("zk-based-eur");
+		console.log(thing);
+		thing.innerText ="Hello World";
+	}
+	</script>
 </body>
