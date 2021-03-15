@@ -19,16 +19,23 @@ setInterval(function() {
 
 function do_the_thing()
 {
+  if (isPageHidden()) {
+    console.log("No focus, sleeping...");
+    return
+  }
 	get_eth_price(p => {
 		// console.log(`1 ETH = ${p} EUR`);
 		const price = new bigDecimal(p);
-    add_html('<hr />');
-    add_html(`1 ETH = ${price.getPrettyValue(3, ' ', 3)} EUR @ ${new Date().toISOString()}`)
-    do_the_fee_thing('Transfer     ', 'Transfer', EXIST_ADDR, price);
-    do_the_fee_thing('TransferNew  ', 'Transfer', NEW_ADDR, price);
-    do_the_fee_thing('Withdraw     ', 'Withdraw', NEW_ADDR, price);
-    do_the_fee_thing('CreateAccount', {"ChangePubKey": "ECDSA" }, EXIST_ADDR, price);
+    //add_html('<hr />');
+    //add_html(`1 ETH = ${price.getPrettyValue(3, ' ', 3)} EUR @ ${new Date().toISOString()}`)
+
+    update_text('zk-based-eur', `${price.round(2).getValue()} EUR  @ ${new Date().toISOString()}`);
+    do_the_fee_thing('zk-transfer-', 'Transfer', EXIST_ADDR, price);
+    do_the_fee_thing('zk-transfer-new-', 'Transfer', NEW_ADDR, price);
+    do_the_fee_thing('zk-withdraw-', 'Withdraw', NEW_ADDR, price);
+    do_the_fee_thing('zk-create-', {"ChangePubKey": "ECDSA" }, EXIST_ADDR, price);
 	});
+  console.log("Scheduled update...")
 }
 
 function do_the_fee_thing(name, type, addr, price)
@@ -38,10 +45,17 @@ function do_the_fee_thing(name, type, addr, price)
     const fee_eth_wei = new bigDecimal(p)
     const fee_eth = fee_eth_wei.divide(WEI_TO_ETH);
     const fee_eur = fee_eth.multiply(price);
-    const message =
-      `${name} = ${fee_eur.round(3).getValue()} EUR = ${fee_eth.round(6).getValue()} ${ZK_TOKEN}`;
-    console.log(message);
-    add_html(message);
+    const str_fee_eur = `${fee_eur.round(3).getValue()} EUR`;
+    if(name === 'zk-transfer-')
+    {
+      document.title = 'zkFee ' + str_fee_eur
+    }
+    update_text(name + 'eur', str_fee_eur);
+    update_text(name + 'eth', `${fee_eth.round(6).getValue()} ETH`);
+    // const message =
+    //   `${name} = ${fee_eur.round(3).getValue()} EUR = ${fee_eth.round(6).getValue()} ${ZK_TOKEN}`;
+    // console.log(message);
+    // add_html(message);
   });
 
 }
@@ -98,3 +112,15 @@ function add_html(message) {
    var element = document.getElementById("new");
    element.prepend(tag);
 }
+
+function update_text(element, text)
+{
+  // console.log(`Update '${element}' with '${text}'`)
+  var thing = document.getElementById(element);
+  // console.log(thing);
+  thing.innerText =text;
+}
+
+function isPageHidden(){
+     return document.hidden || document.msHidden || document.webkitHidden || document.mozHidden;
+ }
